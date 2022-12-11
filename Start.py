@@ -49,8 +49,7 @@ st.title("Sessions")
 def init_connection():
     return sqlite3.connect("database/durak_db")
 
-current_h2_placeholder = st.empty()
-
+first_placeholder_title = st.empty()
 winner_looser_placeholder = st.empty()
 save_btn_placeholder = st.empty()
 player_ingame_placeholder= st.empty()
@@ -59,7 +58,7 @@ col5, col6, col7 = st.columns(3)
 is_open, session_id, start_time, player_ingame = d_c.check_session_open()
 
 if is_open:
-    current_h2_placeholder.markdown("### Aktuelles Spiel:")
+    first_placeholder_title.markdown("### Aktuelles Spiel:")
 
     current_players = d_c.return_sessions_table().loc[session_id].Fellow_Players
     current_players = current_players.replace("[", "")
@@ -115,7 +114,7 @@ if is_open:
         else:
             st.success("Keine Session offen")
 else:
-
+    first_placeholder_title.markdown("### Neues Spiel starten:")
     player_names = list(d_c.return_players_table().names)
     player_in_game = st.multiselect("Mitspieler auswählen", player_names)
 
