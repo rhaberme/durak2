@@ -47,6 +47,7 @@ def init_connection():
 st.markdown("### Aktuelles Spiel:")
 
 winner_looser_placeholder = st.empty()
+save_btn_placeholder = st.empty()
 player_ingame_placeholder= st.empty()
 col5, col6, col7 = st.columns(3)
 
@@ -76,7 +77,7 @@ if is_open:
     col3, col4 = winner_looser_placeholder.columns(2)
     winner = col3.selectbox("Gewinner", current_players, index=0)
     looser = col4.selectbox("Verlierer", current_players, index=1)
-    save_btn = col3.button("Speichern")
+    save_btn = save_btn_placeholder.button("Speichern")
     if save_btn:
         d_c.insert_new_game_results(session_id, winner=winner, looser=looser)
         d_c.update_player_scores(current_players, winner, looser)
