@@ -7,7 +7,11 @@ import data_processing as d_p
 def return_table(table_name, database):
     con = sqlite3.connect(database)
     cursor = con.cursor()
-    cursor.execute(f"""SELECT * FROM '{table_name}'""")
+    try:
+        cursor.execute(f"""SELECT * FROM '{table_name}'""")
+    except sqlite3.OperationalError:
+        create_session_table(table_name)
+        cursor.execute(f"""SELECT * FROM '{table_name}'""")
 
     return cursor.fetchall()
 
@@ -47,6 +51,20 @@ def check_session_open():
         if con:
             con.close()
             print("The SQLite connection is closed")
+
+
+def get_last_session_id():
+        con = sqlite3.connect("database/durak_db")
+        cursor = con.cursor()
+        cursor.execute("SELECT * FROM Sessions")
+        rows_df = pd.DataFrame(cursor.fetchall(),
+                               columns=["Session_id", "Start_Time", "End_Time", "Fellow_Players"])
+        rows_df = rows_df.set_index("Session_id")
+        cursor.close()
+        if con:
+            con.close()
+        return rows_df.index.max()
+
 
 def end_session(session_id):
     try:
