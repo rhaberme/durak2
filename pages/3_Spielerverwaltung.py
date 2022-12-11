@@ -24,10 +24,10 @@ if add_player_btn:
     d_c.add_player(new_name)
     st.success("Spieler hinzugefügt")
 
-st.markdown("## Spieler entfernen")
-player_names = list(d_c.return_players_table().names)
-selected_player = st.selectbox("Spieler wählen", player_names)
-remove_player_btn = st.button("Entfernen")
+# st.markdown("## Spieler entfernen")
+# player_names = list(d_c.return_players_table().names)
+# selected_player = st.selectbox("Spieler wählen", player_names)
+# remove_player_btn = st.button("Entfernen")
 
-if remove_player_btn:
-    d_c.remove_player(selected_player)
+# if remove_player_btn:
+#    d_c.remove_player(selected_player)

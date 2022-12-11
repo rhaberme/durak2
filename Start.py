@@ -39,12 +39,6 @@ st.markdown("""
 
 st.title("Sessions")
 
-# from streamlit_option_menu import option_menu
-
-#with st.sidebar:
-#    selected = option_menu("DURAK", ["Home", 'Einstellungen'],
-#        icons=['house', 'gear'], menu_icon="cast", default_index=1)
-
 
 @st.experimental_singleton
 def init_connection():

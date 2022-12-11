@@ -35,7 +35,7 @@ def check_session_open():
         max_session_id = rows_df.index.max()
         cursor.close()
         if len(rows_df) == 0:
-            return False, 0, 0
+            return False, 0, 0, ""
         if rows_df.loc[max_session_id]["End_Time"] == 0:
             return True, max_session_id, rows_df.loc[max_session_id]["Start_Time"], rows_df.loc[max_session_id]["Fellow_Players"]
         else:
