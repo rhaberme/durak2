@@ -49,7 +49,7 @@ st.title("Sessions")
 def init_connection():
     return sqlite3.connect("database/durak_db")
 
-st.markdown("### Aktuelles Spiel:")
+current_h2_placeholder = st.empty()
 
 winner_looser_placeholder = st.empty()
 save_btn_placeholder = st.empty()
@@ -59,6 +59,8 @@ col5, col6, col7 = st.columns(3)
 is_open, session_id, start_time, player_ingame = d_c.check_session_open()
 
 if is_open:
+    current_h2_placeholder.markdown("### Aktuelles Spiel:")
+
     current_players = d_c.return_sessions_table().loc[session_id].Fellow_Players
     current_players = current_players.replace("[", "")
     current_players = current_players.replace("]", "")
@@ -78,8 +80,10 @@ if is_open:
                                        unsafe_allow_html=True)
 
     col5.metric("Spiel-Nr.", game_number)
-    col6.metric("", last_winner, delta="+ Sieg")
-    col7.metric("", last_looser, delta="- Niederlage")
+    if last_winner != "":
+        col6.metric("", last_winner, delta="+ Sieg")
+    if last_looser != "":
+        col7.metric("", last_looser, delta="- Niederlage")
 
     col3, col4 = winner_looser_placeholder.columns(2)
     winner = col3.selectbox("Gewinner", ["-"] + current_players, index=0)
@@ -112,7 +116,6 @@ if is_open:
             st.success("Keine Session offen")
 else:
 
-    # new_session_exp = st.expander("Neue Session")
     player_names = list(d_c.return_players_table().names)
     player_in_game = st.multiselect("Mitspieler auswählen", player_names)
 
