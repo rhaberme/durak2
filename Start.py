@@ -35,6 +35,10 @@ st.markdown("""
     font-size:16px;
     color: green;
 }
+.big-font-green {
+    font-size:32px;
+    color: green;
+}
 </style>""", unsafe_allow_html=True)
 
 st.title("Sessions")
@@ -69,7 +73,10 @@ if is_open:
     for ingame_player in current_players:
         current_players_string+= f"""{ingame_player} - """
     current_players_string = current_players_string.rstrip(" -")
-    player_ingame_placeholder.metric("Mitspieler", current_players_string)
+
+
+    player_ingame_placeholder.markdown("Mitspieler: "+ f'<p class="big-font-green">{current_players_string}</p>', unsafe_allow_html=True)
+
     col5.metric("Spiel-count", game_number)
     col6.metric("Letzter Gewinner", last_winner)
     col7.metric("Letzter Verlierer", last_looser)
