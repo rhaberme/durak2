@@ -38,8 +38,8 @@ else:
     # st.table(stats_df)
 
 
-    col1, col2, col3, col4 = st.columns(4)
     for player in player_list:
+        col1, col2, col3, col4 = st.columns(4)
         col1.metric("", player)
         col2.metric("Spiele", stats_df[stats_df["names"]==player]["games"])
         if player == last_winner:
