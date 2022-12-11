@@ -1,0 +1,6 @@
+Brauchen Webseite die ermöglicht:
+
+- Auswählen wer mitspielt (an einen Tisch setzen)
+- Reihenfolge (Tisch)
+- Wer hat gewonnen? (durch draufklicken auf Icon)
+- Wer hat verloren? (durch draufklicken auf Icon)
