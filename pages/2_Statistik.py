@@ -44,29 +44,29 @@ else:
         col2.metric("Spiele", stats_df[stats_df["names"]==player]["games"])
         if player == last_winner:
             col3.metric("Gewonnen", stats_df[stats_df["names"]==player]["wins"], delta=1)
-            old_win_quota = round(
+            old_win_games_quota = round(
                 (int(stats_df[stats_df["names"] == player]["wins"]) -1) / (int(stats_df[stats_df["names"] == player]["games"])-1), 2)
+
         else:
             col3.metric("Gewonnen", stats_df[stats_df["names"]==player]["wins"])
 
         if player == last_looser:
             col4.metric("Verloren", stats_df[stats_df["names"]==player]["losses"], delta=-1)
 
-            old_win_quota = round(
-                int(stats_df[stats_df["names"] == player]["wins"]) / int(stats_df[stats_df["names"] == player]["games"])-1, 2)
+            old_win_games_quota = round(
+                int(stats_df[stats_df["names"] == player]["wins"]) / (int(stats_df[stats_df["names"] == player]["games"])-1), 2)
         else:
             col4.metric("Verloren", stats_df[stats_df["names"]==player]["losses"])
 
         try:
-            win_quota = round(
+            win_games_quota = round(
                 int(stats_df[stats_df["names"] == player]["wins"]) / int(stats_df[stats_df["names"] == player]["games"]), 2)
         except ZeroDivisionError:
-            win_quota = "TBD"
-        if (player != last_winner and player != last_looser) or win_quota == "TBD" or win_quota==0.0:
-            col5.metric("WIN/GAMES", win_quota)
+            win_games_quota = "TBD"
+        if (player != last_winner and player != last_looser) or win_games_quota == "TBD" or win_games_quota==0.0:
+            col5.metric("WIN/GAMES", win_games_quota)
         else:
-
-            col5.metric("WIN/GAMES", win_quota, delta=win_quota-old_win_quota)
+            col5.metric("WIN/GAMES", win_games_quota, delta=round(win_games_quota - old_win_games_quota, 2))
 
 
 

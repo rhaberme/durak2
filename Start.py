@@ -75,14 +75,21 @@ if is_open:
     col7.metric("Letzter Verlierer", last_looser)
 
     col3, col4 = winner_looser_placeholder.columns(2)
-    winner = col3.selectbox("Gewinner", current_players, index=0)
-    looser = col4.selectbox("Verlierer", current_players, index=1)
+    winner = col3.selectbox("Gewinner", ["-"] + current_players, index=0)
+    looser = col4.selectbox("Verlierer", ["-"] + current_players, index=0)
     save_btn = save_btn_placeholder.button("Speichern")
     if save_btn:
-        d_c.insert_new_game_results(session_id, winner=winner, looser=looser)
-        d_c.update_player_scores(current_players, winner, looser)
-        st.experimental_rerun()
-        st.success("Gespeichert")
+        if (winner != "-" and looser != "-") and winner != looser:
+            d_c.insert_new_game_results(session_id, winner=winner, looser=looser)
+            d_c.update_player_scores(current_players, winner, looser)
+            st.success("Gespeichert")
+            st.experimental_rerun()
+        elif winner == "-":
+            st.error("Kein Gewinner ausgewählt")
+        elif looser == "-":
+            st.error("Kein Verlierer ausgewählt")
+        else:
+            st.error(f"{winner} kann nicht gleichzeitig gewonnen und verloren haben.")
 
 
     end_session_btn = st.button("Session beenden")
