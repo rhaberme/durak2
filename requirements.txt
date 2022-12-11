@@ -1,5 +1,4 @@
 streamlit
 pandas
 numpy
-sqlite3==2.6.0
 time
