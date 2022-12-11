@@ -214,3 +214,23 @@ def return_last_game_results(session_id):
         return max_game_number, winner, looser
     else:
         return(0, "", "")
+
+
+def update_player_scores(current_players, winner, looser):
+
+    for player in current_players:
+        if player == winner:
+            sql = f''' UPDATE Players
+                          SET games = games + 1, wins = wins + 1 
+                          WHERE player_name = "{player}"'''
+
+        elif player == looser:
+            sql = f''' UPDATE Players
+                          SET games = games + 1, losses = losses + 1 
+                          WHERE player_name = "{player}"'''
+        else:
+            sql = f''' UPDATE Players
+                          SET games = games + 1 
+                          WHERE player_name = "{player}"'''
+
+        do_sql(sql_command=sql, database="database/durak_db")

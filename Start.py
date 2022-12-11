@@ -83,6 +83,7 @@ if is_open:
     save_btn = st.button("Speichern")
     if save_btn:
         d_c.insert_new_game_results(session_id, winner=winner, looser=looser)
+        d_c.update_player_scores(current_players, winner, looser)
         st.success("Gespeichert")
 
 new_session_exp = st.expander("Neue Session")
@@ -100,6 +101,7 @@ start_session_btn = new_session_exp.button("Starten")
 col1, col2 = st.columns([0.3, 1])
 end_session_btn = col1.button("Session beenden")
 get_data_btn = col2.button("Sessions anzeigen")
+refresh_btn = st.button("Aktualisieren")
 
 
 if start_session_btn:
