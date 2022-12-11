@@ -35,9 +35,10 @@ st.markdown("""
     font-size:16px;
     color: green;
 }
-.big-font-green {
+.player-ingame-font {
     font-size:32px;
-    color: green;
+    color: #75FB4C;
+    text-align: center;
 }
 </style>""", unsafe_allow_html=True)
 
@@ -71,15 +72,14 @@ if is_open:
 
     current_players_string = ""
     for ingame_player in current_players:
-        current_players_string+= f"""{ingame_player} - """
-    current_players_string = current_players_string.rstrip(" -")
+        current_players_string+= f"""{ingame_player} &ensp;"""
 
+    player_ingame_placeholder.markdown('<section>Mitspieler:</section>'+ f'<section class="player-ingame-font">{current_players_string}</section>',
+                                       unsafe_allow_html=True)
 
-    player_ingame_placeholder.markdown("Mitspieler: "+ f'<p class="big-font-green">{current_players_string}</p>', unsafe_allow_html=True)
-
-    col5.metric("Spiel-count", game_number)
-    col6.metric("Letzter Gewinner", last_winner)
-    col7.metric("Letzter Verlierer", last_looser)
+    col5.metric("Spiel-Nr.", game_number)
+    col6.metric("", last_winner, delta="+ Sieg")
+    col7.metric("", last_looser, delta="- Niederlage")
 
     col3, col4 = winner_looser_placeholder.columns(2)
     winner = col3.selectbox("Gewinner", ["-"] + current_players, index=0)
