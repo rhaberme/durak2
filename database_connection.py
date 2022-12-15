@@ -122,8 +122,9 @@ def return_players_table():
     return rows_df
 
 
-def add_player(new_name):
+def add_player(new_name, avatar_link):
     try:
+        # todo: check if player_name and avatar_link is unique
         con = sqlite3.connect("database/durak_db")
         cursor = con.cursor()
         print("Successfully Connected to SQLite")
@@ -137,8 +138,19 @@ def add_player(new_name):
                               ({player_id}, "{new_name}", 0, 0, 0)"""
 
         count = cursor.execute(sqlite_insert_query)
-        con.commit()
         print("Record inserted successfully into Players table ", cursor.rowcount)
+
+        con.commit()
+        avatar_link = avatar_link.lstrip("<img src='")
+        avatar_link = avatar_link.rstrip("' />")
+
+        sqlite_insert_query2 = f"""INSERT INTO Avatar_Links
+                               (player_id, player_name, avatar_link) 
+                              VALUES 
+                              ({player_id}, "{new_name}", "{avatar_link}")"""
+        count = cursor.execute(sqlite_insert_query2)
+        print("Record inserted successfully into Avatar_Link table ", cursor.rowcount)
+        con.commit()
         cursor.close()
 
     except sqlite3.Error as error:

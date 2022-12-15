@@ -1,4 +1,5 @@
 import streamlit as st
+from st_clickable_images import clickable_images
 import sqlite3
 from PIL import Image, ImageDraw
 
@@ -93,6 +94,19 @@ if is_open:
     #    st.write("It works")
 
 
+    # https://getavataaars.com/?accessoriesType=Wayfarers&avatarStyle=Circle&clotheType=ShirtCrewNeck&eyeType=Cry&eyebrowType=RaisedExcitedNatural&facialHairType=MoustacheMagnum&hairColor=SilverGray&mouthType=Serious&skinColor=DarkBrown&topType=LongHairCurvy
+    src = 'https://avataaars.io/?avatarStyle=Transparent&topType=LongHairCurvy&accessoriesType=Wayfarers&hairColor=SilverGray&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=ShirtCrewNeck&clotheColor=Gray01&eyeType=Cry&eyebrowType=RaisedExcitedNatural&mouthType=Serious&skinColor=DarkBrown'
+    clicked = clickable_images(
+        [
+            src
+        ],
+        titles=[f"Image #{str(i)}" for i in range(5)],
+        div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"},
+        img_style={"margin": "5px", "height": "100px"},
+    )
+    st.write(clicked)
+    st.markdown(f"Image #{clicked} clicked" if clicked > -1 else "No image clicked")
+
 
     winner = col3.selectbox("Gewinner", ["-"] + current_players, index=0)
     looser = col4.selectbox("Verlierer", ["-"] + current_players, index=0)
@@ -136,7 +150,8 @@ else:
 
     start_session_btn = st.button("Starten")
     if start_session_btn:
-        if not is_open:
+
+        if len(player_in_game) > 1:
             session_id = d_c.start_new_session(player_in_game)
             d_c.create_session_table(session_id)
             st.success(f"Neue Session gestartet")
@@ -144,7 +159,7 @@ else:
             st.experimental_rerun()
 
         else:
-            st.success(f"Session Nr. {session_id} noch offen. Beginn der Session: {d_p.unixtime_to_dt64(start_time)}")
+            st.error(f"Wählen Sie mindestens 2 Spieler aus.")
 
 #get_data_btn = st.button("Sessions anzeigen")
 
