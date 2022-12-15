@@ -1,5 +1,7 @@
 import streamlit as st
 import sqlite3
+from PIL import Image, ImageDraw
+
 
 import data_processing as d_p
 import database_connection as d_c
@@ -85,6 +87,13 @@ if is_open:
         col7.metric("", last_looser, delta="- Niederlage")
 
     col3, col4 = winner_looser_placeholder.columns(2)
+    #img = st.image(Image.open("pics/default_avater.png"))
+    #avatar_btn = st.button(img)
+    #if avatar_btn:
+    #    st.write("It works")
+
+
+
     winner = col3.selectbox("Gewinner", ["-"] + current_players, index=0)
     looser = col4.selectbox("Verlierer", ["-"] + current_players, index=0)
     save_btn = save_btn_placeholder.button("Speichern")
