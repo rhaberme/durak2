@@ -24,10 +24,10 @@ def change_avatar(avatar_link, win=True):
         avatar_link = re.sub('&eyebrowType=(.*)&facialHairColor', "&eyebrowType=RaisedExcitedNatural&facialHairColor", avatar_link)
         return avatar_link
     else:
-        avatar_link = re.sub('&topType=(.*)', "&topType=ShortHairDreads02", avatar_link)
+        # avatar_link = re.sub('&topType=(.*)&accessoriesType', "&topType=ShortHairDreads02&accessoriesType", avatar_link)
         avatar_link = re.sub('&eyeType=(.*)&eyebrowType', "&eyeType=Cry&eyebrowType", avatar_link)
         avatar_link = re.sub('&eyebrowType=(.*)&facialHairColor', "&eyebrowType=SadConcernedNatural&facialHairColor", avatar_link)
-        avatar_link = re.sub('accessoriesType=(.*)&avatarStyle', "accessoriesType=Blank&avatarStyle", avatar_link)
+        avatar_link = re.sub('accessoriesType=(.*)&hairColor', "accessoriesType=Blank&avatarStyle", avatar_link)
         avatar_link = re.sub('&mouthType=(.*)&skinColor', "&mouthType=Sad&skinColor", avatar_link)
         return avatar_link
 

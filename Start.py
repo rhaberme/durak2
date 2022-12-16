@@ -105,12 +105,12 @@ if is_open:
         st.experimental_rerun()
 
     if st.session_state["winner"] != None:
-        st.write(f"winner: {st.session_state['winner']}")
+        st.markdown(f"#### Gewinner: {current_players[st.session_state['winner']]}")
 
     if st.session_state["looser"] != None:
-        st.write(f"looser: {st.session_state['looser']}")
+        st.markdown(f"#### Verlierer: {current_players[st.session_state['looser']]}")
 
-    st.markdown(f"Spieler {current_players[clicked]} ausgewählt" if clicked > -1 else "No image clicked")
+    # st.markdown(f"Spieler {current_players[clicked]} ausgewählt" if clicked > -1 else "No image clicked")
 
     game_number, last_winner, last_looser = d_c.return_last_game_results(session_id)
 
@@ -121,16 +121,6 @@ if is_open:
 
     # player_ingame_placeholder.markdown('<section>Mitspieler:</section>'+ f'<section class="player-ingame-font">{current_players_string}</section>',
     #                                  unsafe_allow_html=True)
-    st.markdown("## Letztes Spiel:")
-    col5, col6, col7 = st.columns(3)
-
-    col5.metric("Spiel-Nr.", game_number)
-    if last_winner != "":
-        col6.metric("", last_winner, delta="+ Sieg")
-    if last_looser != "":
-        col7.metric("", last_looser, delta="- Niederlage")
-
-    # col3, col4 = winner_looser_placeholder.columns(2)
 
 
     save_btn = st.button("Speichern")
@@ -150,6 +140,17 @@ if is_open:
             st.error("Kein Verlierer ausgewählt")
         else:
             st.error(f"{winner} kann nicht gleichzeitig gewonnen und verloren haben.")
+
+
+    st.markdown("## Letztes Spiel:")
+    col5, col6, col7 = st.columns(3)
+
+    col5.metric("Spiel-Nr.", game_number)
+    if last_winner != "":
+        col6.metric("", last_winner, delta="+ Sieg")
+    if last_looser != "":
+        col7.metric("", last_looser, delta="- Niederlage")
+
 
 
     end_session_btn = st.button("Session beenden")
