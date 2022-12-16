@@ -2,9 +2,8 @@ import streamlit as st
 from st_clickable_images import clickable_images
 import sqlite3
 
-
-import data_processing as d_p
 import database_connection as d_c
+import data_processing as d_p
 
 st.set_page_config(
     page_title="Durak",
@@ -52,15 +51,14 @@ def init_connection():
     return sqlite3.connect("database/durak_db")
 
 first_placeholder_title = st.empty()
-winner_looser_placeholder = st.empty()
-save_btn_placeholder = st.empty()
-player_ingame_placeholder= st.empty()
-col5, col6, col7 = st.columns(3)
+#winner_looser_placeholder = st.empty()
+#save_btn_placeholder = st.empty()
+#player_ingame_placeholder= st.empty()
 
 is_open, session_id, start_time, player_ingame = d_c.check_session_open()
 
 if is_open:
-    first_placeholder_title.markdown("### Aktuelles Spiel:")
+    first_placeholder_title.markdown("## Aktuelles Spiel:")
 
     current_players = d_c.return_sessions_table().loc[session_id].Fellow_Players
     current_players = current_players.replace("[", "")
@@ -71,17 +69,48 @@ if is_open:
     current_players = current_players.split(",")
 
     # https://getavataaars.com/?accessoriesType=Wayfarers&avatarStyle=Circle&clotheType=ShirtCrewNeck&eyeType=Cry&eyebrowType=RaisedExcitedNatural&facialHairType=MoustacheMagnum&hairColor=SilverGray&mouthType=Serious&skinColor=DarkBrown&topType=LongHairCurvy
+    if "winner" not in st.session_state.keys():
+        st.session_state["winner"] = None
 
-    img_src_list = [d_c.return_players_avatar_link(x) for x in current_players]
+    if "looser" not in st.session_state.keys():
+        st.session_state["looser"] = None
+
+    if "winner" in st.session_state.keys() and  st.session_state["winner"] != None:
+        st.session_state["img_src_list"] = [d_c.return_players_avatar_link(x) for x in current_players]
+        st.session_state["img_src_list"][st.session_state["winner"]] = d_p.change_avatar(
+            st.session_state["img_src_list"][st.session_state["winner"]], win=True)
+    else:
+        st.session_state["img_src_list"] = [d_c.return_players_avatar_link(x) for x in current_players]
+    if "looser" in st.session_state.keys() and st.session_state["looser"] != None:
+        st.session_state["img_src_list"][st.session_state["looser"]] = d_p.change_avatar(st.session_state["img_src_list"][st.session_state["looser"]], win=False)
+
     # st.write(img_src_list)
     clicked = clickable_images(
-        img_src_list,
-        titles=[f"{current_players[i]}" for i in range(len(img_src_list))],
+        st.session_state["img_src_list"],
+        titles=[f"{current_players[i]}" for i in range(len(st.session_state["img_src_list"]))],
         div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"},
         img_style={"margin": "5px", "height": "100px"},
     )
-    st.write(clicked)
-    st.markdown(f"Image #{clicked} clicked" if clicked > -1 else "No image clicked")
+
+    if clicked >= 0 and st.session_state["winner"] is None:
+        st.session_state["winner"] = clicked
+        st.experimental_rerun()
+
+    elif clicked >=0 and st.session_state["looser"] is None:
+        st.session_state["looser"] = clicked
+        st.experimental_rerun()
+    elif clicked >=0 and (st.session_state["winner"] is not None and st.session_state["looser"] is not None):
+        st.session_state["winner"] = None
+        st.session_state["looser"] = None
+        st.experimental_rerun()
+
+    if st.session_state["winner"] != None:
+        st.write(f"winner: {st.session_state['winner']}")
+
+    if st.session_state["looser"] != None:
+        st.write(f"looser: {st.session_state['looser']}")
+
+    st.markdown(f"Spieler {current_players[clicked]} ausgewählt" if clicked > -1 else "No image clicked")
 
     game_number, last_winner, last_looser = d_c.return_last_game_results(session_id)
 
@@ -90,8 +119,10 @@ if is_open:
     for ingame_player in current_players:
         current_players_string+= f"""{ingame_player} &ensp;"""
 
-    player_ingame_placeholder.markdown('<section>Mitspieler:</section>'+ f'<section class="player-ingame-font">{current_players_string}</section>',
-                                       unsafe_allow_html=True)
+    # player_ingame_placeholder.markdown('<section>Mitspieler:</section>'+ f'<section class="player-ingame-font">{current_players_string}</section>',
+    #                                  unsafe_allow_html=True)
+    st.markdown("## Letztes Spiel:")
+    col5, col6, col7 = st.columns(3)
 
     col5.metric("Spiel-Nr.", game_number)
     if last_winner != "":
@@ -99,19 +130,19 @@ if is_open:
     if last_looser != "":
         col7.metric("", last_looser, delta="- Niederlage")
 
-    col3, col4 = winner_looser_placeholder.columns(2)
+    # col3, col4 = winner_looser_placeholder.columns(2)
 
 
-
-
-    winner = col3.selectbox("Gewinner", ["-"] + current_players, index=0)
-    looser = col4.selectbox("Verlierer", ["-"] + current_players, index=0)
-    save_btn = save_btn_placeholder.button("Speichern")
+    save_btn = st.button("Speichern")
     if save_btn:
+        winner = current_players[st.session_state["winner"]]
+        looser = current_players[st.session_state["looser"]]
         if (winner != "-" and looser != "-") and winner != looser:
             d_c.insert_new_game_results(session_id, winner=winner, looser=looser)
             d_c.update_player_scores(current_players, winner, looser)
             st.success("Gespeichert")
+            st.session_state["winner"] = None
+            st.session_state["looser"] = None
             st.experimental_rerun()
         elif winner == "-":
             st.error("Kein Gewinner ausgewählt")

@@ -129,7 +129,7 @@ def return_players_avatar_link(player_name):
                    WHERE player_name = "{player_name}"
                    """)
 
-    avatar_link = cursor.fetchall()
+    avatar_link = cursor.fetchall()[0][0]
     return avatar_link
 
 def add_player(new_name, avatar_link):
