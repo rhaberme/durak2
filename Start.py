@@ -145,11 +145,11 @@ if is_open:
     st.markdown("## Letztes Spiel:")
     col5, col6, col7 = st.columns(3)
 
-    col5.metric("Spiel-Nr.", game_number)
+    col7.metric("Spiel-Nr.", game_number)
     if last_winner != "":
-        col6.metric("", last_winner, delta="+ Sieg")
+        col5.metric("", last_winner, delta="+ Sieg")
     if last_looser != "":
-        col7.metric("", last_looser, delta="- Niederlage")
+        col6.metric("", last_looser, delta="- Niederlage")
 
 
 
