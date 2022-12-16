@@ -71,6 +71,19 @@ if is_open:
 
     current_players = current_players.split(",")
 
+    # https://getavataaars.com/?accessoriesType=Wayfarers&avatarStyle=Circle&clotheType=ShirtCrewNeck&eyeType=Cry&eyebrowType=RaisedExcitedNatural&facialHairType=MoustacheMagnum&hairColor=SilverGray&mouthType=Serious&skinColor=DarkBrown&topType=LongHairCurvy
+
+    img_src_list = [d_c.return_players_avatar_link(x) for x in current_players]
+    # st.write(img_src_list)
+    clicked = clickable_images(
+        img_src_list,
+        titles=[f"Image #{current_players[i]}" for i in range(len(img_src_list))],
+        div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"},
+        img_style={"margin": "5px", "height": "100px"},
+    )
+    st.write(clicked)
+    st.markdown(f"Image #{clicked} clicked" if clicked > -1 else "No image clicked")
+
     game_number, last_winner, last_looser = d_c.return_last_game_results(session_id)
 
 
@@ -88,24 +101,8 @@ if is_open:
         col7.metric("", last_looser, delta="- Niederlage")
 
     col3, col4 = winner_looser_placeholder.columns(2)
-    #img = st.image(Image.open("pics/default_avater.png"))
-    #avatar_btn = st.button(img)
-    #if avatar_btn:
-    #    st.write("It works")
 
 
-    # https://getavataaars.com/?accessoriesType=Wayfarers&avatarStyle=Circle&clotheType=ShirtCrewNeck&eyeType=Cry&eyebrowType=RaisedExcitedNatural&facialHairType=MoustacheMagnum&hairColor=SilverGray&mouthType=Serious&skinColor=DarkBrown&topType=LongHairCurvy
-    src = 'https://avataaars.io/?avatarStyle=Transparent&topType=LongHairCurvy&accessoriesType=Wayfarers&hairColor=SilverGray&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=ShirtCrewNeck&clotheColor=Gray01&eyeType=Cry&eyebrowType=RaisedExcitedNatural&mouthType=Serious&skinColor=DarkBrown'
-    clicked = clickable_images(
-        [
-            src
-        ],
-        titles=[f"Image #{str(i)}" for i in range(5)],
-        div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"},
-        img_style={"margin": "5px", "height": "100px"},
-    )
-    st.write(clicked)
-    st.markdown(f"Image #{clicked} clicked" if clicked > -1 else "No image clicked")
 
 
     winner = col3.selectbox("Gewinner", ["-"] + current_players, index=0)

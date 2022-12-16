@@ -122,6 +122,16 @@ def return_players_table():
     return rows_df
 
 
+def return_players_avatar_link(player_name):
+    con = sqlite3.connect("database/durak_db")
+    cursor = con.cursor()
+    cursor.execute(f"""SELECT avatar_link FROM Avatar_Links
+                   WHERE player_name = "{player_name}"
+                   """)
+
+    avatar_link = cursor.fetchall()
+    return avatar_link
+
 def add_player(new_name, avatar_link):
     try:
         # todo: check if player_name and avatar_link is unique
