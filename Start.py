@@ -77,7 +77,7 @@ if is_open:
     # st.write(img_src_list)
     clicked = clickable_images(
         img_src_list,
-        titles=[f"Image #{current_players[i]}" for i in range(len(img_src_list))],
+        titles=[f"{current_players[i]}" for i in range(len(img_src_list))],
         div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"},
         img_style={"margin": "5px", "height": "100px"},
     )
