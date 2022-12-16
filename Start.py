@@ -1,7 +1,6 @@
 import streamlit as st
 from st_clickable_images import clickable_images
 import sqlite3
-from PIL import Image, ImageDraw
 
 
 import data_processing as d_p
