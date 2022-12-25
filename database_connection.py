@@ -243,7 +243,7 @@ def insert_new_game_results(session_id, winner, looser):
     return max_game_number, winner, looser
 
 
-def return_last_game_results(session_id):
+def return_game_results(session_id):
     game_result_table_df = pd.DataFrame(return_table(session_id, "database/session_db"), columns=["game_number", "winner", "looser",
                                                                    "game_time"])
     if len(game_result_table_df)>0:

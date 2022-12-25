@@ -46,7 +46,7 @@ st.title("Statistik")
 
 stats_df = d_c.return_players_table()
 last_session_id = d_c.get_last_session_id()
-game_number, last_winner, last_looser = d_c.return_last_game_results(last_session_id)
+game_number, last_winner, last_looser = d_c.return_game_results(last_session_id)
 
 section_names_list = ["Gesamt", "Sessions", "Spieler"]
 player_list = list(stats_df["names"])

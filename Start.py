@@ -67,7 +67,6 @@ if is_open:
     current_players = current_players.replace("'", "")
 
     current_players = current_players.split(",")
-
     # https://getavataaars.com/?accessoriesType=Wayfarers&avatarStyle=Circle&clotheType=ShirtCrewNeck&eyeType=Cry&eyebrowType=RaisedExcitedNatural&facialHairType=MoustacheMagnum&hairColor=SilverGray&mouthType=Serious&skinColor=DarkBrown&topType=LongHairCurvy
     if "winner" not in st.session_state.keys():
         st.session_state["winner"] = None
@@ -84,13 +83,13 @@ if is_open:
     if "looser" in st.session_state.keys() and st.session_state["looser"] != None:
         st.session_state["img_src_list"][st.session_state["looser"]] = d_p.change_avatar(st.session_state["img_src_list"][st.session_state["looser"]], win=False)
 
-    # st.write(img_src_list)
     clicked = clickable_images(
         st.session_state["img_src_list"],
         titles=[f"{current_players[i]}" for i in range(len(st.session_state["img_src_list"]))],
         div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"},
         img_style={"margin": "5px", "height": "100px"},
     )
+
 
     if clicked >= 0 and st.session_state["winner"] is None:
         st.session_state["winner"] = clicked
@@ -112,7 +111,7 @@ if is_open:
 
     # st.markdown(f"Spieler {current_players[clicked]} ausgewählt" if clicked > -1 else "No image clicked")
 
-    game_number, last_winner, last_looser = d_c.return_last_game_results(session_id)
+    game_number, last_winner, last_looser = d_c.return_game_results(session_id)
 
 
     current_players_string = ""
