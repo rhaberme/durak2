@@ -253,7 +253,7 @@ def return_game_results(session_id):
 
         return max_game_number, winner, looser
     else:
-        return(0, "", "")
+        return 0, "", ""
 
 
 def update_player_scores(current_players, winner, looser):
