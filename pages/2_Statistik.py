@@ -118,7 +118,7 @@ else:
     for player in player_list:
         col0, col1, col2, col3, col4, col5, col6, col7 = st.columns([0.8, 1.8, 1, 1, 1, 1,1 ,1])
         st.write(" ")
-        col0.image("pics/gold_medal.png")
+        col0.image("pics/gold_medal.png", width=50)
         col1.metric("", player)
         col2.metric("Spiele", stats_df[stats_df["names"]==player]["games"])
         if player == last_winner:
