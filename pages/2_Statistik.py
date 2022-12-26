@@ -114,11 +114,19 @@ elif selected_section == "Spieler":
     st.altair_chart(chart, use_container_width=True)
 
 else:
-    # Idee: Nach Ranking ordnen
+    best_ratio = 0
+    best_player = ""
+    for row in stats_df.iterrows():
+        new_ratio = row[1].games/row[1].losses
+        if new_ratio > best_ratio:
+            best_ratio = new_ratio
+            best_player = row[1].names
+
     for player in player_list:
         col0, col1, col2, col3, col4, col5, col6, col7 = st.columns([0.8, 1.8, 1, 1, 1, 1,1 ,1])
         st.write(" ")
-        col0.image("pics/gold_medal.png", width=50)
+        if player == best_player:
+            col0.image("pics/gold_medal.png", width=50)
         col1.metric("", player)
         col2.metric("Spiele", stats_df[stats_df["names"]==player]["games"])
         if player == last_winner:
