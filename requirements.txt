@@ -5,5 +5,5 @@ plotly
 st_clickable_images
 altair~=4.2.0
 hashlib
-yaml
+pyyaml
 datetime
