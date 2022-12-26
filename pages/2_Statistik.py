@@ -3,7 +3,6 @@ import database_connection as d_c
 import pandas as pd
 import altair as alt
 import plotly.express as px
-from plotly.graph_objs import Layout
 
 st.set_page_config(
     page_title="Durak",
@@ -55,9 +54,11 @@ player_list = list(stats_df["names"])
 selected_section = st.selectbox("", section_names_list)
 
 if selected_section == "Sessions":
-    sessions_ids_list = list(d_c.return_sessions_table().index)
-    st.selectbox("Session IDs", sessions_ids_list)
-
+    session_table = d_c.return_sessions_table()
+    sessions_ids_list = list(session_table.index)
+    selected_session_id = st.selectbox("Session IDs", sessions_ids_list)
+    # idee: Reihenfolge mit st.graphviz_chart
+    st.write(session_table)
 
 elif selected_section == "Spieler":
     players_list = d_c.return_players_table().names
