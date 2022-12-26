@@ -41,15 +41,23 @@ st.markdown("""
 </style>""", unsafe_allow_html=True)
 
 message_placeholder = st.empty()
+text_input_placeholder = st.empty()
 
-message = st.text_input('Enter a message:', '')
-if st.button('Submit'):
+message = text_input_placeholder.text_input('Nachricht:', '')
+
+
+if st.button("Senden"):
     now = datetime.datetime.now()
     time_string = now.strftime('%Y-%m-%d %H:%M:%S')
     d_c.insert_message(time_string, message)
+
 col1, col2 = message_placeholder.columns([0.2, 0.6])
 messages_list = d_c.return_table("Messages", "database/messages_db.db")
 for message in messages_list:
     col1.write(message[0])
-    col2.write(message[1])
+    if message[1] != "":
+        col2.write(message[1])
+    else:
+        col2.write("o")
+
 
