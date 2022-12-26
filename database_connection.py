@@ -280,3 +280,26 @@ def update_player_scores(current_players, winner, looser):
                           WHERE player_name = "{player}"'''
 
         do_sql(sql_command=sql, database="database/durak_db")
+
+
+def insert_message(time, message):
+    try:
+        con = sqlite3.connect("database/messages_db.db")
+        cursor = con.cursor()
+        print("Successfully Connected to SQLite")
+        cursor.execute("SELECT * FROM Messages")
+        sqlite_insert_query = f"""INSERT INTO Messages
+                              (time, message) 
+                               VALUES 
+                              ("{time}", "{message}")"""
+        count = cursor.execute(sqlite_insert_query)
+        con.commit()
+        print("Record inserted successfully into Message table ", cursor.rowcount)
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Failed to insert data into sqlite table", error)
+    finally:
+        if con:
+            con.close()
+            print("The SQLite connection is closed")

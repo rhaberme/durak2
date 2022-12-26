@@ -3,6 +3,7 @@ import database_connection as d_c
 import pandas as pd
 import altair as alt
 import plotly.express as px
+from plotly.graph_objs import Layout
 
 st.set_page_config(
     page_title="Durak",
@@ -51,7 +52,6 @@ game_number, last_winner, last_looser = d_c.return_last_game_results(last_sessio
 section_names_list = ["Gesamt", "Sessions", "Spieler"]
 player_list = list(stats_df["names"])
 
-
 selected_section = st.selectbox("", section_names_list)
 
 if selected_section == "Sessions":
@@ -91,36 +91,30 @@ elif selected_section == "Spieler":
                 losses.append(loss_number)
 
     game_numbers = list(range(0, game_number))
-
     player_stats_df = pd.DataFrame({'Spiele': game_numbers, 'Ergebnis': results_list})
+    wins_losses_df = pd.DataFrame({"x": game_numbers, "wins": wins, "losses": losses})
 
-    print(player_stats_df)
+    fig = px.line(wins_losses_df, x='x', y='wins', labels={'wins': 'Wins'}, template="plotly_dark",
+                  )
+    fig.add_bar(x=wins_losses_df['x'], y=wins_losses_df['losses'], name='Losses')
+    fig.update_layout(xaxis_title="Spiele",
+                      yaxis_title="WINS / LOSSES",
+                      showlegend=False,
+                      xaxis_showgrid=False,
+                      yaxis_showgrid=False,
+                      plot_bgcolor='rgba(0,0,0,0)')
+
+    st.plotly_chart(fig, use_container_width=True)
+
     chart = alt.Chart(player_stats_df).mark_bar().encode(
         x='Spiele:O',  # x-axis is ordinal
         y='Ergebnis:Q',  # y-axis is quantitative
         color=alt.Color('Ergebnis:Q', scale=alt.Scale(range=['red', 'green']))  # color negative values red
     )
-
     st.altair_chart(chart, use_container_width=True)
 
-    wins_losses_df = pd.DataFrame({"x": game_numbers, "wins": wins, "losses": losses})
-    # wins_losses_df = wins_losses_df.set_index("x")
-
-    fig = px.line(wins_losses_df, x='x', y='wins', labels={'wins': 'Wins'}, template="plotly_dark",
-                  )
-
-    # Add a second line to the chart
-    fig.add_scatter(x=wins_losses_df['x'], y=wins_losses_df['losses'], line_color='red', name='Losses')
-    fig.update_layout(xaxis_title="Spiele",
-                      yaxis_title="WINS / LOSSES",
-                      showlegend=False,
-                      xaxis_showgrid=False,
-                      yaxis_showgrid=False)
-
-    st.plotly_chart(fig, use_container_width=True)
-
 else:
-
+    # Idee: Nach Ranking ordnen
     for player in player_list:
         col1, col2, col3, col4, col5, col6, col7 = st.columns([1.8, 1, 1, 1, 1,1 ,1])
         st.write(" ")
