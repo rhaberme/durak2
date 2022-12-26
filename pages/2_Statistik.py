@@ -1,8 +1,8 @@
 import streamlit as st
-
-import data_processing as d_p
 import database_connection as d_c
-
+import pandas as pd
+import altair as alt
+import plotly.express as px
 
 st.set_page_config(
     page_title="Durak",
@@ -46,7 +46,7 @@ st.title("Statistik")
 
 stats_df = d_c.return_players_table()
 last_session_id = d_c.get_last_session_id()
-game_number, last_winner, last_looser = d_c.return_game_results(last_session_id)
+game_number, last_winner, last_looser = d_c.return_last_game_results(last_session_id)
 
 section_names_list = ["Gesamt", "Sessions", "Spieler"]
 player_list = list(stats_df["names"])
@@ -55,10 +55,69 @@ player_list = list(stats_df["names"])
 selected_section = st.selectbox("", section_names_list)
 
 if selected_section == "Sessions":
-    pass
+    sessions_ids_list = list(d_c.return_sessions_table().index)
+    st.selectbox("Session IDs", sessions_ids_list)
+
 
 elif selected_section == "Spieler":
-    pass
+    players_list = d_c.return_players_table().names
+    player_selected = st.selectbox("Wählen:", players_list)
+    sessions_table = d_c.return_sessions_table()
+    played_sessions = [x[0] for x in sessions_table.iterrows() if player_selected in x[1].Fellow_Players]
+    game_number = 0
+    results_list = []
+    win_number = 0
+    wins = []
+    loss_number = 0
+    losses = []
+
+    for session_id in played_sessions:
+        results_df = d_c.return_all_game_results_in_session(session_id)
+        for row in results_df.iterrows():
+            game_number += 1
+            if row[1].winner == player_selected:
+                results_list.append(1)
+                win_number += 1
+                wins.append(win_number)
+                losses.append(loss_number)
+            elif row[1].looser == player_selected:
+                results_list.append(-1)
+                loss_number += 1
+                wins.append(win_number)
+                losses.append(loss_number)
+            else:
+                results_list.append(0)
+                wins.append(win_number)
+                losses.append(loss_number)
+
+    game_numbers = list(range(0, game_number))
+
+    player_stats_df = pd.DataFrame({'Spiele': game_numbers, 'Ergebnis': results_list})
+
+    print(player_stats_df)
+    chart = alt.Chart(player_stats_df).mark_bar().encode(
+        x='Spiele:O',  # x-axis is ordinal
+        y='Ergebnis:Q',  # y-axis is quantitative
+        color=alt.Color('Ergebnis:Q', scale=alt.Scale(range=['red', 'green']))  # color negative values red
+    )
+
+    st.altair_chart(chart, use_container_width=True)
+
+    wins_losses_df = pd.DataFrame({"x": game_numbers, "wins": wins, "losses": losses})
+    # wins_losses_df = wins_losses_df.set_index("x")
+
+    fig = px.line(wins_losses_df, x='x', y='wins', labels={'wins': 'Wins'}, template="plotly_dark",
+                  )
+
+    # Add a second line to the chart
+    fig.add_scatter(x=wins_losses_df['x'], y=wins_losses_df['losses'], line_color='red', name='Losses')
+    fig.update_layout(xaxis_title="Spiele",
+                      yaxis_title="WINS / LOSSES",
+                      showlegend=False,
+                      xaxis_showgrid=False,
+                      yaxis_showgrid=False)
+
+    st.plotly_chart(fig, use_container_width=True)
 
 else:
 

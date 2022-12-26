@@ -1,6 +1,43 @@
 import streamlit as st
 import database_connection as d_c
 
+st.set_page_config(
+    page_title="Durak",
+    page_icon="🃏",
+)
+
+hide_menu = """
+<style>
+#MainMenu {visibility:hidden;}
+footer{visibility:hidden;}
+</style>
+"""
+st.markdown(hide_menu, unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+.small-font-green {
+    font-size:12px;
+    color: green;
+}
+.small-font-red {
+    font-size:12px;
+    color: red;
+}
+.normal-font-red {
+    font-size:16px;
+    color: red;
+}
+.normal-font-green {
+    font-size:16px;
+    color: green;
+}
+.player-stats-font {
+    font-size:32px;
+    color: #75FB4C;
+    text-align: center;
+}
+</style>""", unsafe_allow_html=True)
 
 # Set base URL for API
 BASE_URL = "https://avataaars.io/"
@@ -240,7 +277,6 @@ else:
 selected_clothe_type = col3.selectbox("Kleidung", clothe_type_options)
 selected_clothe_color = col3.selectbox("Farbe Kleidung", clothe_color_options)
 
-# https://avataaars.io/?avatarStyle=Transparent&topType=LongHairBun&accessoriesType=Prescription02&hairColor=BrownDark&facialHairType=MoustacheFancy&facialHairColor=Blonde&clotheType=ShirtScoopNeck&clotheColor=Black&eyeType=Close&eyebrowType=Default&mouthType=Concerned&skinColor=Tanned
 avatar_url = f"{BASE_URL}?avatarStyle=Transparent&topType={selected_top_type}&accessoriesType={selected_accessories_type}&hairColor={selected_hair_color}&hatColor={selected_hat_color}&facialHairType={selected_facial_hair_type}&facialHairColor={selected_facial_hair_color}&clotheType={selected_clothe_type}&clotheColor={selected_clothe_color}&eyeType={selected_eye_type}&eyebrowType={selected_eyebrow_type}&mouthType={selected_mouth_type}&skinColor={selected_skin_color}"
 
 avatar_img_placeholder.image(avatar_url)

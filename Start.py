@@ -111,7 +111,7 @@ if is_open:
 
     # st.markdown(f"Spieler {current_players[clicked]} ausgewählt" if clicked > -1 else "No image clicked")
 
-    game_number, last_winner, last_looser = d_c.return_game_results(session_id)
+    game_number, last_winner, last_looser = d_c.return_last_game_results(session_id)
 
 
     current_players_string = ""
@@ -124,22 +124,24 @@ if is_open:
 
     save_btn = st.button("Speichern")
     if save_btn:
-        winner = current_players[st.session_state["winner"]]
-        looser = current_players[st.session_state["looser"]]
-        if (winner != "-" and looser != "-") and winner != looser:
-            d_c.insert_new_game_results(session_id, winner=winner, looser=looser)
-            d_c.update_player_scores(current_players, winner, looser)
-            st.success("Gespeichert")
-            st.session_state["winner"] = None
-            st.session_state["looser"] = None
-            st.experimental_rerun()
-        elif winner == "-":
-            st.error("Kein Gewinner ausgewählt")
-        elif looser == "-":
-            st.error("Kein Verlierer ausgewählt")
-        else:
-            st.error(f"{winner} kann nicht gleichzeitig gewonnen und verloren haben.")
-
+        try:
+            winner = current_players[st.session_state["winner"]]
+            looser = current_players[st.session_state["looser"]]
+            if (winner != "-" and looser != "-") and winner != looser:
+                d_c.insert_new_game_results(session_id, winner=winner, looser=looser)
+                d_c.update_player_scores(current_players, winner, looser)
+                st.success("Gespeichert")
+                st.session_state["winner"] = None
+                st.session_state["looser"] = None
+                st.experimental_rerun()
+            elif winner == "-":
+                st.error("Kein Gewinner ausgewählt")
+            elif looser == "-":
+                st.error("Kein Verlierer ausgewählt")
+            else:
+                st.error(f"{winner} kann nicht gleichzeitig gewonnen und verloren haben.")
+        except TypeError:
+            st.error("Kein Spieler ausgewählt")
 
     st.markdown("## Letztes Spiel:")
     col5, col6, col7 = st.columns(3)
