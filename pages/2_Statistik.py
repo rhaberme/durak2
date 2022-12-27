@@ -58,34 +58,34 @@ if selected_section == "Sessions":
     session_table = d_c.return_sessions_table()
     sessions_ids_list = list(session_table.index)
     selected_session_id = st.selectbox("Session IDs", sessions_ids_list)
+    if len(session_table) > 0:
+        player_string = session_table.loc[selected_session_id].Fellow_Players
+        player_string = player_string.lstrip("[")
+        player_string = player_string.rstrip("]")
+        player_string = player_string.replace("'", "")
+        player_list = player_string.split(",")
+        dot = graphviz.Digraph()
+        dot.attr(rankdir='LR', size='10', bgcolor='#0F1116')
+        dot.attr('node', shape='circle', style='filled', color='white')
+        dot.attr('edge', color='white')
 
-    player_string = session_table.loc[selected_session_id].Fellow_Players
-    player_string = player_string.lstrip("[")
-    player_string = player_string.rstrip("]")
-    player_string = player_string.replace("'", "")
-    player_list = player_string.split(",")
-    dot = graphviz.Digraph()
-    dot.attr(rankdir='LR', size='10', bgcolor='#0F1116')
-    dot.attr('node', shape='circle', style='filled', color='white')
-    dot.attr('edge', color='white')
+        last_player = None
+        for player in player_list:
+            if last_player:
+                dot.edge(last_player, player)
+                last_player = player
+            else:
+                last_player = player
+        dot.edge(player_list[-1], player_list[0])
 
-    last_player = None
-    for player in player_list:
-        if last_player:
-            dot.edge(last_player, player)
-            last_player = player
-        else:
-            last_player = player
-    dot.edge(player_list[-1], player_list[0])
+        st.graphviz_chart(dot)
+        results_df = d_c.return_all_game_results_in_session(selected_session_id)
+        results_df.rename(columns={"game_number": "Spiel", "winner": "Gewinner", "looser": "Verlierer",
+                                        "game_time": "Dauer"}, inplace=True)
+        results_df = results_df.set_index("Spiel")
+        # results_df['Dauer'] = results_df['Dauer'].apply(lambda x: x/3600)
 
-    st.graphviz_chart(dot)
-    results_df = d_c.return_all_game_results_in_session(selected_session_id)
-    results_df.rename(columns={"game_number": "Spiel", "winner": "Gewinner", "looser": "Verlierer",
-                                    "game_time": "Dauer"}, inplace=True)
-    results_df = results_df.set_index("Spiel")
-    # results_df['Dauer'] = results_df['Dauer'].apply(lambda x: x/3600)
-
-    st.table(results_df)
+        st.table(results_df)
 
 
 elif selected_section == "Spieler":
