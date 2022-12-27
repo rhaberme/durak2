@@ -142,7 +142,6 @@ eyebrow_type_options = [
 
 eye_type_options = [
     "Close",
-    "Cry",
     "Default",
     "Dizzy",
     "EyeRoll",

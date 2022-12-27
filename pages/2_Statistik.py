@@ -66,7 +66,7 @@ if selected_section == "Sessions":
         player_list = player_string.split(",")
         dot = graphviz.Digraph()
         dot.attr(rankdir='LR', size='10', bgcolor='#0F1116')
-        dot.attr('node', shape='circle', style='filled', color='white')
+        dot.attr('node', shape='circle', style='filled', color='white', fixedsize='true', width='1')
         dot.attr('edge', color='white')
 
         last_player = None
