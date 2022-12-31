@@ -288,7 +288,7 @@ def contains_only_letters(string):
 
 add_player_btn = st.button("Hinzufügen")
 if add_player_btn:
-    if new_name and avatar_url and contains_only_letters(new_name):
+    if new_name and avatar_url and contains_only_letters(new_name) and len(new_name) < 10:
         d_c.add_player(new_name, avatar_url)
         st.success("Spieler hinzugefügt")
     elif not new_name:
@@ -297,5 +297,7 @@ if add_player_btn:
         st.error("Geben Sie den Link zu ihrem Avatar ein.")
     elif not contains_only_letters(new_name):
         st.error("Der Name darf nur Buchstaben enthalten.")
+    elif len(new_name) > 10:
+        st.error("Der Name ist zu lang.")
     else:
         st.error("Geben Sie den Namen und den Link zu ihrem Avatar ein.")
