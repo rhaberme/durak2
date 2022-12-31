@@ -280,14 +280,22 @@ avatar_url = f"{BASE_URL}?avatarStyle=Transparent&topType={selected_top_type}&ac
 
 avatar_img_placeholder.image(avatar_url)
 
+def contains_only_letters(string):
+    for character in string:
+        if not character.isalpha():
+            return False
+    return True
+
 add_player_btn = st.button("Hinzufügen")
 if add_player_btn:
-    if new_name and avatar_url:
+    if new_name and avatar_url and contains_only_letters(new_name):
         d_c.add_player(new_name, avatar_url)
         st.success("Spieler hinzugefügt")
     elif not new_name:
         st.error("Geben Sie einen Namen ein.")
     elif not avatar_url:
         st.error("Geben Sie den Link zu ihrem Avatar ein.")
+    elif not contains_only_letters(new_name):
+        st.error("Der Name darf nur Buchstaben enthalten.")
     else:
         st.error("Geben Sie den Namen und den Link zu ihrem Avatar ein.")
